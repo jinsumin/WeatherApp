@@ -1,86 +1,67 @@
-import {
-  SafeAreaView,
-  Button,
-  Platform,
-  StyleSheet,
-  Text,
-  Vibration,
-  View,
-} from "react-native";
+import { StyleSheet, View, Text, ScrollView, Dimensions } from "react-native";
 
-const Separator = () => {
-  return <View style={Platform.OS === "android" ? styles.separator : null} />;
-};
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function App() {
-  const ONE_SECOND_IN_MS = 1000;
-  const PATTERN = [
-    ONE_SECOND_IN_MS,
-    2 * ONE_SECOND_IN_MS,
-    3 * ONE_SECOND_IN_MS,
-  ];
-  const PATTERN_DESC =
-    Platform.OS === "android"
-      ? "wait 1s, vibrate 2s, wait 3s"
-      : "wait 1s, vibrate, wait 2s, vibrate, wait 3s";
-
   return (
-    <SafeAreaView style={styles.container}>
-      <Text style={[styles.header, styles.paragraph]}>Vibration API</Text>
-      <View>
-        <Button title="Vibrate once" onPress={() => Vibration.vibrate()} />
+    <View style={style.container}>
+      <View style={style.city}>
+        <Text style={style.cityName}>Seoul</Text>
       </View>
-      <Separator />
-      {Platform.OS === "android"
-        ? [
-            <View>
-              <Button
-                title="Vibrate for 10 seconds"
-                onPress={() => Vibration.vibrate(10 * ONE_SECOND_IN_MS)}
-              />
-            </View>,
-            <Separator />,
-          ]
-        : null}
-      <Text style={styles.paragraph}>Pattern: {PATTERN_DESC}</Text>
-      <Button
-        title="Vibrate with pattern"
-        onPress={() => Vibration.vibrate(PATTERN)}
-      />
-      <Separator />
-      <Button
-        title="Vibrate with pattern until cancelled"
-        onPress={() => Vibration.vibrate(PATTERN, true)}
-      />
-      <Separator />
-      <Button
-        title="Stop vibration pattern"
-        onPress={() => Vibration.cancel()}
-        color="#FF0000"
-      />
-    </SafeAreaView>
+      <ScrollView
+        pagingEnabled
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={style.weather}
+      >
+        <View style={style.day}>
+          <Text style={style.temperature}>15</Text>
+          <Text style={style.description}>Rainy</Text>
+        </View>
+        <View style={style.day}>
+          <Text style={style.temperature}>15</Text>
+          <Text style={style.description}>Rainy</Text>
+        </View>
+        <View style={style.day}>
+          <Text style={style.temperature}>15</Text>
+          <Text style={style.description}>Rainy</Text>
+        </View>
+        <View style={style.day}>
+          <Text style={style.temperature}>15</Text>
+          <Text style={style.description}>Rainy</Text>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({
+const style = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "tomato",
+  },
+  city: {
+    flex: 1.2,
     justifyContent: "center",
-    paddingTop: 44,
-    padding: 8,
+    alignItems: "center",
   },
-  header: {
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
+  cityName: {
+    fontSize: 48,
+    fontWeight: "500",
   },
-  paragraph: {
-    margin: 24,
-    textAlign: "center",
+  weather: {
+    backgroundColor: "gray",
   },
-  separator: {
-    marginVertical: 8,
-    borderBottomColor: "#737373",
-    borderBottomWidth: StyleSheet.hairlineWidth,
+  day: {
+    width: SCREEN_WIDTH,
+    alignItems: "center",
+  },
+  temperature: {
+    fontSize: 158,
+    marginTop: 50,
+  },
+  description: {
+    fontSize: 60,
+    marginTop: -30,
   },
 });
