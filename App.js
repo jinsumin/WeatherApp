@@ -1,12 +1,41 @@
 import { StyleSheet, View, Text, ScrollView, Dimensions } from "react-native";
+import { useEffect, useState } from "react";
+import * as Location from "expo-location";
+import { requestForegroundPermissionsAsync } from "expo-location";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export default function App() {
+  const [street, setStreet] = useState("Loading...");
+  const [permission, setPermission] = useState(null);
+  const getWeather = async () => {
+    const { granted } = await Location.requestForegroundPermissionsAsync();
+    if (!granted) {
+      setPermission(false);
+    }
+    const {
+      coords: { latitude, longitude },
+    } = await Location.getCurrentPositionAsync({
+      accuracy: 5,
+    });
+    const location = await Location.reverseGeocodeAsync(
+      {
+        latitude,
+        longitude,
+      },
+      { useGoogleMaps: false }
+    );
+    setStreet(location[0].street);
+  };
+
+  useEffect(() => {
+    getWeather();
+  }, []);
+
   return (
     <View style={style.container}>
       <View style={style.city}>
-        <Text style={style.cityName}>Seoul</Text>
+        <Text style={style.cityName}>{street}</Text>
       </View>
       <ScrollView
         pagingEnabled
