@@ -8,6 +8,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 export default function App() {
   const [street, setStreet] = useState("Loading...");
   const [permission, setPermission] = useState(null);
+  const API_KEY = "3147f9620506be85308c74c392720d7b";
   const getWeather = async () => {
     const { granted } = await Location.requestForegroundPermissionsAsync();
     if (!granted) {
@@ -26,6 +27,11 @@ export default function App() {
       { useGoogleMaps: false }
     );
     setStreet(location[0].street);
+    const response = await fetch(
+      `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude=alert&appid=${API_KEY}`
+    );
+    const json = await response.json();
+    console.log(json);
   };
 
   useEffect(() => {
